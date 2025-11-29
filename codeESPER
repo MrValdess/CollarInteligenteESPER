@@ -13,3 +13,16 @@ create schema Temperatura (idcollar integer, nombre string, valor int);
 create schema Comedero (idcomedero int, estado string, reserva string);
 
 create schema Clinica (nombre string, ubicacion string);
+
+@Name('AlertaPulsaciones')
+@Name('AlertaRespiraciones')
+@Name('AlertaTemperatura')
+@Name('AlertaComedero')
+@Name('ComederoVacio')
+@Name('ZonaDesconocida')
+@Name('Huida')
+@Name('InactividadProlongada')
+@Name('ProblemaSalud')
+@Name('RecepciónAlerta')
+@Name('AvisarVeterinaria)
+@Name('AvisarDueño')
