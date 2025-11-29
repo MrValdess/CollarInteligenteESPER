@@ -1,1 +1,15 @@
+%esperepl
 
+create schema Mascota(idcollar integer, nombre string, especie string, raza string, estado string);
+
+create schema Localizacion(idcollar integer, nombre string, area string, permitida string);
+
+create schema Pulsaciones (idcollar integer, nombre string, valor int, estado string);
+
+create schema Respiracion (idcollar integer, nombre string, valor int, estado string);
+
+create schema Temperatura (idcollar integer, nombre string, valor int);
+
+create schema Comedero (idcomedero int, estado string, reserva string);
+
+create schema Clinica (nombre string, ubicacion string);
