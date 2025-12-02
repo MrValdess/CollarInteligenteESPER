@@ -1,1 +1,58 @@
+// Mascotas
+Mascota = {idcollar = 1, nombre = "Manoli", especie = "Perro", raza = "Labrador", estado = "activo"}
+Mascota = {idcollar = 2, nombre = "Kaki", especie = "Perro", raza = "Beagle", estado = "activo"}
+Mascota = {idcollar = 3, nombre = "Agustín", especie = "Gato", raza = "siames", estado = "inactivo"}
+Mascota = {idcollar = 4, nombre = "Bolita", especie = "Gato", raza = "Persa", estado = "inactivo"}
+
+Manoli reposo, valores bajos 
+Pulsaciones={idcollar=1, nombre="Manoli", valor=45, estado="reposo"}
+Respiraciones={idcollar=1, nombre="Manoli", valor=8, estado="reposo"}
+Temperatura={idcollar=1, nombre="Manoli", valor=36}
+
+Agustín zona no permitida, pulsaciones normales
+Localizacion={idcollar=2, nombre="Agustín", area="Calle", permitida="no"}
+Pulsaciones={idcollar=2, nombre="Agustín", valor=60, estado="reposo"}
+Respiraciones={idcollar=2, nombre="Agustín", valor=12, estado="reposo"}
+Temperatura={idcollar=2, nombre="Agustín", valor=38}
+
+Kaki activo
+Localizacion={idcollar=3, nombre="Kaki", area="Casa", permitida="si"}
+Pulsaciones={idcollar=3, nombre="Kaki", valor=120, estado="activo"}
+Respiraciones={idcollar=3, nombre="Kaki", valor=20, estado="activo"}
+Temperatura={idcollar=3, nombre="Kaki", valor=39}
+
+Bolita zona no permitida, pulsaciones altas
+Localizacion={idcollar=4, nombre="Bolita", area="Jardín", permitida="no"}
+Pulsaciones={idcollar=4, nombre="Bolita", valor=190, estado="activo"}
+Respiraciones={idcollar=4, nombre="Bolita", valor=45, estado="activo"}
+Temperatura={idcollar=4, nombre="Bolita", valor=41}
+
+
+Comedero={idcomedero=1, idcollar=1, estado="lleno", reserva="si"}
+Comedero={idcomedero=2, idcollar=2, estado="medio", reserva="si"}
+Comedero={idcomedero=3, idcollar=3, estado="vacio", reserva="no"}  // vacio sin reserva
+Comedero={idcomedero=4, idcollar=4, estado="medio", reserva="no"}  
+
+Manoli permanece inactiva
+Pulsaciones={idcollar=1, nombre="Manoli", valor=48, estado="reposo"}
+Respiraciones={idcollar=1, nombre="Manoli", valor=9, estado="reposo"}
+
+Agustín huida 
+Pulsaciones={idcollar=2, nombre="Agustín", valor=110, estado="activo"}
+Respiraciones={idcollar=2, nombre="Agustín", valor=20, estado="activo"}
+
+Bolita sigue huyendo
+Pulsaciones={idcollar=4, nombre="Bolita", valor=200, estado="activo"}
+Respiraciones={idcollar=4, nombre="Bolita", valor=50, estado="activo"}
+
+Comedero de Bolita sin cambios
+Comedero={idcomedero=4, idcollar=4, estado="medio", reserva="no"}
+
+Manoli permanece inactiva
+Pulsaciones={idcollar=1, nombre="Manoli", valor=46, estado="reposo"}
+Respiraciones={idcollar=1, nombre="Manoli", valor=8, estado="reposo"}
+Temperatura={idcollar=1, nombre="Manoli", valor=36}
+
+Clinica = {nombre="AnimalitosBonitos", ubicacion="Puertas del sur"}
+Clinica = {nombre="Vet+", ubicacion="El altillo"}
 
