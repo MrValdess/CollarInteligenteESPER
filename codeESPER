@@ -60,8 +60,8 @@ from pattern [every (p = Pulsaciones(valor < 50) and r = Respiraciones(valor < 1
 
 @Name('ProblemaSalud')
 insert into ProblemaSalud
-select p.idCollar, p.nombre as NomMascota
-from pattern [every (p= AlertaPulsaciones and t = AlertaTemperatura and r = AlertaRespiraciones) where timer:within(20 seconds)];
+select p.idcollar, p.NomMascota
+from pattern [every p = AlertaPulsaciones ->t = AlertaTemperatura(idcollar = p.idcollar) ->r = AlertaRespiraciones(idcollar = p.idcollar) where timer:within(20 seconds)];
 
 @Name('AlertaComedero')
 insert into AlertaComedero
