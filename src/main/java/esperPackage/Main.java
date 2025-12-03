@@ -15,13 +15,17 @@ public class Main {
 
     final static String INPUT_QUEUE_NAME = "InputMessages";
 
-
+    
     //Patterns definition
     enum Pattern {
-        Patron1(
-                "insert into Patron1 " +
-                        "select * from Temperature WHERE temp>10;"
-
+        AlertaPulsaciones(
+                "insert into AlertaPulsaciones " +
+                        "select  p1.idcollar as idcollar, p1.nombre as NomMascota, p1.valor as Pul1, p2.valor as Pul2 " +
+                        " from pattern [every ( p1 = Pulsaciones(p1.valor > PULMAX or p1.valor < PULMIN) or (p1 = Pulsaciones() -> p2 = Pulsaciones(Math.abs(p2.valor - p1.valor) >= 40 and p1.idcollar = p2.idcollar))) where timer:within(15 seconds)];"
+        ),
+        Patron2(
+                "insert into Patron2 " +
+                        "select * from Temperature WHERE temp<=10;"
         );
 
         private final String pattern;
@@ -73,11 +77,11 @@ public class Main {
         System.out.println("UTILS");
 
 //DEFINIMOS EL ESQUEMA
-        EsperUtils.deployPattern("@public @buseventtype create json schema Temperature (EvenTypeName String,temp int)");
+        EsperUtils.deployPattern("@public @buseventtype create json schema Localizacion(idcollar int, nombre String, area String, permitida String)");
         System.out.println("ESQUEMA");
 
 //AÑADIMOS LOS PATRONES AL MOTOR DE EVENTOS COMPLEJOS
-        EPStatement[] statements = EsperUtils.deployPattern(generatePatterns(Pattern.Patron1)).getStatements();
+        EPStatement[] statements = EsperUtils.deployPattern(generatePatterns(Pattern.AlertaPulsaciones)).getStatements();
         for (EPStatement epStatement: statements) {
             EsperUtils.addListener(epStatement,outputChannelUCA);
         }
