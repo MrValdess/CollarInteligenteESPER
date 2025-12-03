@@ -68,11 +68,6 @@ insert into AlertaComedero
 select c.idcollar, c.estado as EstadoComedero
 from pattern [every c = Comedero(estado != 'VACIO') -> timer:interval(10 minutes) and not Comedero(idcollar = c.idcollar, estado = 'VACIO')];
 
-@Name('EstadoComedero')
-insert into EstadoComedero
-select c.idCollar, c.estado as EstadoActual
-from pattern [ every c = (AlertaComedero or ComederoVacio) ];
-
 @Name('AvisarVeterinaria')
 insert into AvisarVeterinaria
 select a.nombre
