@@ -70,3 +70,4 @@ insert into AvisarVeterinaria
 select  "Mensaje Enviado a la clínica" as Mensaje, c.nombre as Clinica
 from pattern [every (ProblemaSalud or InactividadProlongada) -> c = Clinica ];
 
+
