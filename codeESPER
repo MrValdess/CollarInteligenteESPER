@@ -17,12 +17,12 @@ create constant variable integer RESPMIN = 10;
 
 @Name('AlertaPulsaciones')
 insert into AlertaPulsaciones
-select  p1.idcollar as idcollar, p1.nombre as NomMascota, p1.valor as Pul1, p2.valor as Pul2
+select  p1.idcollar as idcollar, p1.nombre as NomMascota, p1.valor as Pul1, p2.valor as Pul2, p1.estado as Estado
 from pattern [every ( p1 = Pulsaciones(p1.valor > PULMAX or p1.valor < PULMIN) or (p1 = Pulsaciones() -> p2 = Pulsaciones(Math.abs(p2.valor - p1.valor) >= 40 and p1.idcollar = p2.idcollar))) where timer:within(15 seconds)];
 
 @Name('AlertaRespiraciones')
 insert into AlertaRespiraciones
-select  r1.idcollar as idcollar, r1.nombre as NomMascota, r1.valor as Resp1, r2.valor as Resp2
+select  r1.idcollar as idcollar, r1.nombre as NomMascota, r1.valor as Resp1, r2.valor as Resp2, r1.estado as Estado
 from pattern [every ( r1 = Respiraciones(r1.valor > RESPMAX or r1.valor < RESPMIN) or (r1= Respiraciones() -> r2 = Respiraciones(Math.abs(r2.valor - r1.valor) >= 25 and r1.idcollar = r2.idcollar))) where timer:within(15 seconds)];
 
 @Name('AlertaTemperatura')
@@ -47,8 +47,8 @@ from pattern [every l = Localizacion(permitida = 'no') -> p1 = Pulsaciones(idcol
 
 @Name('InactividadProlongada')
 insert into InactividadProlongada
-select p.valor as Pulsaciones, r.valor as Respiraciones, m.estado as Estado, p.idcollar as Collar, p.nombre as NomMascota
-from pattern [every (p = Pulsaciones(valor < 50) and r = Respiraciones(valor < 10, idcollar = p.idcollar) and m = Mascota(estado = 'Inactivo', idcollar = p.idcollar)) where timer:within(5 seconds)];
+select p.Pul1 as Pulsaciones, r.Resp1 as Respiraciones, p.Estado as Estado, p.idcollar as Collar, p.NomMascota as NomMascota
+from pattern [every (p = AlertaPulsaciones(p.Estado = 'Inactivo') -> r = AlertaRespiraciones(r.Estado = 'Inactivo', r.idcollar = p.idcollar)) where timer:within(5 seconds)];
 
 @Name('ProblemaSalud')
 insert into ProblemaSalud
@@ -64,3 +64,8 @@ from pattern [every c = Comedero(estado != 'Vacio') -> timer:interval(10 minutes
 insert into AvisarDueno
 select "Mensaje Enviado al dueño" as Mensaje
 from pattern [every (Huida or ZonaDesconocida or AlertaComedero or ComederoVacio or AlertaPulsaciones or AlertaTemperatura or AlertaRespiraciones)];
+
+@Name('AvisarVeterinaria')
+insert into AvisarVeterinaria
+select  "Mensaje Enviado a la clínica" as Mensaje, c.nombre as Clinica
+from pattern [every (ProblemaSalud or InactividadProlongada) -> c = Clinica ];
