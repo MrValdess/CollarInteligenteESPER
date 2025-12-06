@@ -1,25 +1,17 @@
 create schema Mascota(idcollar integer, nombre string, especie string, raza string, estado string);
-
 create schema Localizacion(idcollar integer, nombre string, area string, permitida string);
-
 create schema Pulsaciones (idcollar integer, nombre string, valor int, estado string);
-
 create schema Respiraciones (idcollar integer, nombre string, valor int, estado string);
-
 create schema Temperatura (idcollar integer, nombre string, valor int);
-
 create schema Comedero (idcomedero int, idcollar int, estado string, reserva string);
-
 create schema Clinica (nombre string, ubicacion string);
 
-//por minuto
 create constant variable integer PULMAX = 150;
 create constant variable integer PULMIN = 60;
 
 create constant variable integer TEMPMAX = 150;
 create constant variable integer TEMPMIN = 60;
 
-//por minuto
 create constant variable integer RESPMAX = 40;
 create constant variable integer RESPMIN = 10;
 
@@ -56,7 +48,7 @@ from pattern [every l = Localizacion(permitida = 'no') -> p1 = Pulsaciones(idcol
 @Name('InactividadProlongada')
 insert into InactividadProlongada
 select p.valor as Pulsaciones, r.valor as Respiraciones, m.estado as Estado, p.idcollar as Collar, p.nombre as NomMascota
-from pattern [every (p = Pulsaciones(valor < 50) and r = Respiraciones(valor < 10, idcollar = p.idcollar) and m = Mascota(estado = 'INACTIVO', idcollar = p.idcollar)) where timer:within(5 seconds)];
+from pattern [every (p = Pulsaciones(valor < 50) and r = Respiraciones(valor < 10, idcollar = p.idcollar) and m = Mascota(estado = 'Inactivo', idcollar = p.idcollar)) where timer:within(5 seconds)];
 
 @Name('ProblemaSalud')
 insert into ProblemaSalud
@@ -66,14 +58,9 @@ from pattern [every p = AlertaPulsaciones -> t = AlertaTemperatura(idcollar = p.
 @Name('AlertaComedero')
 insert into AlertaComedero
 select c.idcollar, c.estado as EstadoComedero
-from pattern [every c = Comedero(estado != 'VACIO') -> timer:interval(10 minutes) and not Comedero(idcollar = c.idcollar, estado = 'VACIO')];
+from pattern [every c = Comedero(estado != 'Vacio') -> timer:interval(10 minutes) and not Comedero(idcollar = c.idcollar, estado = 'Vacio')];
 
-@Name('AvisarVeterinaria')
-insert into AvisarVeterinaria
-select a.nombre
-from pattern [ every a = (ProblemaSalud or InactividadProlongada) ];
-
-@Name('AvisarDueño')
-insert into AvisarDueño
-select a.nombre
-from pattern [ every a = (Huida or ZonaDesconocida or AlertaComedero or ComederoVacio or EstadoComedero or AlertaPulsaciones or AlertaTemperatura or AlertaRespiraciones) ];
+@Name('AvisarDueno')
+insert into AvisarDueno
+select "Mensaje Enviado al dueño" as Mensaje
+from pattern [every (Huida or ZonaDesconocida or AlertaComedero or ComederoVacio or AlertaPulsaciones or AlertaTemperatura or AlertaRespiraciones)];
