@@ -1,58 +1,62 @@
-//Mascotas
-Mascota = {idcollar = 1, nombre = "Manoli", especie = "Perro", raza = "Labrador", estado = "activo"}
-Mascota = {idcollar = 2, nombre = "Kaki", especie = "Perro", raza = "Beagle", estado = "activo"}
-Mascota = {idcollar = 3, nombre = "Agustín", especie = "Gato", raza = "siames", estado = "inactivo"}
-Mascota = {idcollar = 4, nombre = "Bolita", especie = "Gato", raza = "Persa", estado = "inactivo"}
+// Mascotas
+Mascota = {idcollar = 1, nombre = "Manoli", especie = "Perro", raza = "Labrador", estado = "Activo"}
+Mascota = {idcollar = 2, nombre = "Kaki", especie = "Perro", raza = "Beagle", estado = "Activo"}
+Mascota = {idcollar = 3, nombre = "Agustín", especie = "Gato", raza = "siames", estado = "Inactivo"}
+Mascota = {idcollar = 4, nombre = "Bolita", especie = "Gato", raza = "Persa", estado = "Inactivo"}
 
-//Manoli inactivo, valores bajos
-Pulsaciones={idcollar=1, nombre="Manoli", valor=45, estado="inactivo"}
-Respiraciones={idcollar=1, nombre="Manoli", valor=8, estado="inactivo"}
+Manoli reposo, valores bajos
+Pulsaciones={idcollar=1, nombre="Manoli", valor=45, estado="Inactivo"}
+Respiraciones={idcollar=1, nombre="Manoli", valor=8, estado="Inactivo"}
 Temperatura={idcollar=1, nombre="Manoli", valor=36}
 
-//Agustín zona no permitida, pulsaciones normales
-Localizacion={idcollar=2, nombre="Agustín", area="Calle", permitida="no"}
-Pulsaciones={idcollar=2, nombre="Agustín", valor=60, estado="inactivo"}
-Respiraciones={idcollar=2, nombre="Agustín", valor=12, estado="inactivo"}
+Agustín zona no permitida, pulsaciones normales
+Localizacion={idcollar=2, nombre="Agustín", area="Calle", permitida="No"}
+Pulsaciones={idcollar=2, nombre="Agustín", valor=60, estado="Inactivo"}
+Respiraciones={idcollar=2, nombre="Agustín", valor=12, estado="Inactivo"}
 Temperatura={idcollar=2, nombre="Agustín", valor=38}
 
-//Kaki activo
-Localizacion={idcollar=3, nombre="Kaki", area="Casa", permitida="si"}
-Pulsaciones={idcollar=3, nombre="Kaki", valor=120, estado="activo"}
-Respiraciones={idcollar=3, nombre="Kaki", valor=20, estado="activo"}
+Kaki activo
+Localizacion={idcollar=3, nombre="Kaki", area="Casa", permitida="Si"}
+Pulsaciones={idcollar=3, nombre="Kaki", valor=120, estado="Activo"}
+Respiraciones={idcollar=3, nombre="Kaki", valor=20, estado="Activo"}
 Temperatura={idcollar=3, nombre="Kaki", valor=39}
 
-//Bolita zona no permitida, pulsaciones altas
-Localizacion={idcollar=4, nombre="Bolita", area="Jardín", permitida="no"}
-Pulsaciones={idcollar=4, nombre="Bolita", valor=190, estado="activo"}
-Respiraciones={idcollar=4, nombre="Bolita", valor=45, estado="activo"}
+Bolita zona no permitida, pulsaciones altas
+Localizacion={idcollar=4, nombre="Bolita", area="Jardín", permitida="No"}
+Pulsaciones={idcollar=4, nombre="Bolita", valor=190, estado="Activo"}
+Respiraciones={idcollar=4, nombre="Bolita", valor=45, estado="Activo"}
 Temperatura={idcollar=4, nombre="Bolita", valor=41}
 
 
-Comedero={idcomedero=1, idcollar=1, estado="lleno", reserva="si"}
-Comedero={idcomedero=2, idcollar=2, estado="medio", reserva="si"}
-Comedero={idcomedero=3, idcollar=3, estado="vacio", reserva="no"}  // vacio sin reserva
-Comedero={idcomedero=4, idcollar=4, estado="medio", reserva="no"}
+Comedero={idcomedero=1, idcollar=1, estado="Lleno", reserva="Llena"}
+Comedero={idcomedero=2, idcollar=2, estado="Medio", reserva="Llena"}
+Comedero={idcomedero=3, idcollar=3, estado="Vacio", reserva="Vacia"}  // vacio sin reserva
+Comedero={idcomedero=4, idcollar=4, estado="Medio", reserva="Vacia"}
 
-//Manoli permanece inactiva
-Pulsaciones={idcollar=1, nombre="Manoli", valor=48, estado="inactivo"}
-Respiraciones={idcollar=1, nombre="Manoli", valor=9, estado="inactivo"}
-Clinica = {nombre="AnimalitosBonitos", ubicacion="Puertas del sur"}
+Manoli permanece inactiva
+Pulsaciones={idcollar=1, nombre="Manoli", valor=48, estado="Inactivo"}
+Respiraciones={idcollar=1, nombre="Manoli", valor=9, estado="Inactivo"}
 
-//Agustín huida
-Pulsaciones={idcollar=2, nombre="Agustín", valor=110, estado="activo"}
-Respiraciones={idcollar=2, nombre="Agustín", valor=20, estado="activo"}
+Manoli con actividad anormal estando inactiva
+Pulsaciones={idcollar=1, nombre="Manoli", valor=48, estado="Inactivo"}
+Respiraciones={idcollar=1, nombre="Manoli", valor=9, estado="Inactivo"}
 
-//Bolita sigue huyendo
-Pulsaciones={idcollar=4, nombre="Bolita", valor=200, estado="activo"}
-Respiraciones={idcollar=4, nombre="Bolita", valor=50, estado="activo"}
-Clinica = {nombre="Vet+", ubicacion="El altillo"}
 
-//Comedero de Bolita sin cambios
-Comedero={idcomedero=4, idcollar=4, estado="medio", reserva="no"}
+Agustín huida
+Pulsaciones={idcollar=2, nombre="Agustín", valor=110, estado="Activo"}
+Respiraciones={idcollar=2, nombre="Agustín", valor=20, estado="Activo"}
 
-//Manoli permanece inactiva
-Pulsaciones={idcollar=1, nombre="Manoli", valor=46, estado="inactivo"}
-Respiraciones={idcollar=1, nombre="Manoli", valor=8, estado="inactivo"}
+Bolita sigue huyendo
+Pulsaciones={idcollar=4, nombre="Bolita", valor=200, estado="Activo"}
+Respiraciones={idcollar=4, nombre="Bolita", valor=50, estado="Activo"}
+
+Comedero de Bolita sin cambios
+Comedero={idcomedero=4, idcollar=4, estado="Medio", reserva="Vacia"}
+
+Manoli permanece inactiva
+Pulsaciones={idcollar=1, nombre="Manoli", valor=46, estado="Inactivo"}
+Respiraciones={idcollar=1, nombre="Manoli", valor=8, estado="Inactivo"}
 Temperatura={idcollar=1, nombre="Manoli", valor=36}
-Clinica = {nombre="AnimalitosBonitos", ubicacion="Puertas del sur"}
 
+Clinica = {nombre="AnimalitosBonitos", ubicacion="Puertas del sur"}
+Clinica = {nombre="Vet+", ubicacion="El altillo"}

@@ -15,7 +15,7 @@ public class Main {
     enum Pattern {
         AlertaPulsaciones(
                 "@public insert into AlertaPulsaciones " +
-                        "select  p1.idcollar as idcollar, p1.nombre as NomMascota, p1.valor as Pul1, p2.valor as Pul2 " +
+                        "select  p1.idcollar as idcollar, p1.nombre as NomMascota, p1.valor as Pul1, p2.valor as Pul2, p1.estado as Estado " +
                         " from pattern [every ( p1 = Pulsaciones(p1.valor > PULMAX or p1.valor < PULMIN) or (p1 = Pulsaciones() -> p2 = Pulsaciones(Math.abs(p2.valor - p1.valor) >= 40 and p1.idcollar = p2.idcollar))) where timer:within(15 seconds)];"
         ),
         AlertaTemperatura(
@@ -30,14 +30,45 @@ public class Main {
         ),
         AlertaRespiraciones(
                 "@public insert into AlertaRespiraciones " +
-                        "select r1.idcollar as idcollar, r1.nombre as NomMascota, r1.valor as Resp1, r2.valor as Resp2" +
+                        "select r1.idcollar as idcollar, r1.nombre as NomMascota, r1.valor as Resp1, r2.valor as Resp2, r1.estado as Estado" +
                         " from pattern [every ( r1 = Respiraciones(r1.valor > RESPMAX or r1.valor < RESPMIN) or (r1=Respiraciones() -> r2 = Respiraciones(Math.abs(r2.valor - r1.valor) >= 25 and r1.idcollar = r2.idcollar))) where timer:within(15 seconds)];"
         ),
         ComederoVacio(
                 "@public insert into ComederoVacio " +
-                        "select c.idcomedero" +
-                        "from pattern [every c = Comedero (estado = 'vacio' and reserva = 'no')];"
-        );
+                        "select c.idcomedero " +
+                        "from pattern [every c=Comedero(c.estado = 'Vacio' and c.reserva = 'Vacia')];"
+        ),
+        ActividadAnormal(
+                "@public insert into ActividadAnormal " +
+                        "select p.Pul1 as Pulsaciones, r.Resp1 as Respiraciones, p.Estado as Estado, p.idcollar as Collar, p.NomMascota as NomMascota " +
+                        "from pattern [every (p = AlertaPulsaciones(p.Estado = 'Inactivo') -> r = AlertaRespiraciones(r.Estado = 'Inactivo' and r.idcollar = p.idcollar)) where timer:within(5 seconds)];"
+        ),
+        Huida(
+                "@public insert into Huida " +
+                        "select l.idcollar, l.nombre, l.area " +
+                        "from pattern [every l = Localizacion(permitida = 'No') -> p1 = Pulsaciones(idcollar = l.idcollar) -> p2 = Pulsaciones(idcollar = l.idcollar, (valor - p1.valor)/p1.valor > 0.40) where timer:within(10 seconds)];"
+        ),
+        ProblemaSalud(
+                "@public insert into ProblemaSalud " +
+                        "select p.idcollar, p.NomMascota " +
+                        "from pattern [every p = AlertaPulsaciones -> t = AlertaTemperatura(idcollar = p.idcollar) ->r = AlertaRespiraciones(idcollar = p.idcollar) where timer:within(20 seconds)];"
+        ),
+        AlertaComedero(
+                "@public insert into AlertaComedero " +
+                        "select c.idcollar, c.estado as EstadoComedero " +
+                        "from pattern [every c = Comedero(estado != 'Vacio') -> timer:interval(11 minutes) and not Comedero(idcollar = c.idcollar, estado = 'Vacio')];"
+        ),
+        AvisarDueno(
+                "@public insert into AvisarDueno " +
+                        "select \"Mensaje Enviado al dueño\" as Mensaje " +
+                        "from pattern [every (Huida or ZonaDesconocida or AlertaComedero or ComederoVacio or AlertaPulsaciones or AlertaTemperatura or AlertaRespiraciones)];"
+        ),
+        AvisarVeterinaria(
+                "@public insert into AvisarVeterinaria " +
+                        "select  \"Mensaje Enviado a la clínica\" as Mensaje, c.nombre as Clinica " +
+                        "from pattern [every (ProblemaSalud or ActividadAnormal) -> c = Clinica ];"
+        )
+        ;
 
         private final String pattern;
 
@@ -88,11 +119,13 @@ public class Main {
         System.out.println("UTILS");
 
 //DEFINIMOS EL ESQUEMA
+        EsperUtils.deployPattern("@public @buseventtype create json schema Mascota(idcollar integer, nombre string, especie string, raza string, estado string)");
         EsperUtils.deployPattern("@public @buseventtype create json schema Localizacion(idcollar int, nombre String, area String, permitida String)");
         EsperUtils.deployPattern("@public @buseventtype create json schema Pulsaciones(idcollar int, nombre String, valor int, estado String)");
         EsperUtils.deployPattern("@public @buseventtype create json schema Temperatura(idcollar int, nombre String, valor int)");
         EsperUtils.deployPattern("@public @buseventtype create json schema Respiraciones(idcollar int, nombre String, valor int, estado String)");
         EsperUtils.deployPattern("@public @buseventtype create json schema Comedero(idcomedero int, idcollar int, estado String, reserva String)");
+        EsperUtils.deployPattern("@public @buseventtype create json schema Clinica(nombre string, ubicacion string)");
 
         EsperUtils.deployPattern("@public create constant variable integer PULMAX = 150;");
         EsperUtils.deployPattern("@public create constant variable integer PULMIN = 60;");
@@ -107,7 +140,8 @@ public class Main {
 //AÑADIMOS LOS PATRONES AL MOTOR DE EVENTOS COMPLEJOS
         EPStatement[] statements = EsperUtils.deployPattern(generatePatterns(Pattern.AlertaPulsaciones,
                 Pattern.ZonaDesconocida, Pattern.AlertaTemperatura, Pattern.AlertaRespiraciones,
-                Pattern.ComederoVacio)).getStatements();
+                Pattern.ComederoVacio, Pattern.ActividadAnormal, Pattern.Huida, Pattern.ProblemaSalud,
+                Pattern.AlertaComedero, Pattern.AvisarDueno, Pattern.AvisarVeterinaria)).getStatements();
 
         for (EPStatement epStatement: statements) {
             EsperUtils.addListener(epStatement,outputChannelUCA);

@@ -33,22 +33,21 @@ from pattern [every ( t1 = Temperatura(t1.valor > TEMPMAX or t1.valor < TEMPMIN)
 @Name('ComederoVacio')
 insert into ComederoVacio
 select c.idcomedero
-from pattern [every c = Comedero (estado = 'vacio' and reserva = 'no')];
+from pattern [every c = Comedero (estado = 'Vacio' and reserva = 'Vacia')];
 
 @Name('ZonaDesconocida')
 insert into ZonaDesconocida
 select *
-from pattern [every l = Localizacion (permitida = 'no')];
+from pattern [every l = Localizacion (permitida = 'No')];
 
 @Name('Huida')
 insert into Huida
 select l.idcollar, l.nombre, l.area
-from pattern [every l = Localizacion(permitida = 'no') -> p1 = Pulsaciones(idcollar = l.idcollar) -> p2 = Pulsaciones(idcollar = l.idcollar, (valor - p1.valor)/p1.valor > 0.40) where timer:within(10 seconds)];
+from pattern [every l = Localizacion(permitida = 'No') -> p1 = Pulsaciones(idcollar = l.idcollar) -> p2 = Pulsaciones(idcollar = l.idcollar, (valor - p1.valor)/p1.valor > 0.40) where timer:within(10 seconds)];
 
-@Name('InactividadProlongada')
-insert into InactividadProlongada
-select p.Pul1 as Pulsaciones, r.Resp1 as Respiraciones, p.Estado as Estado, p.idcollar as Collar, p.NomMascota as NomMascota
-from pattern [every (p = AlertaPulsaciones(p.Estado = 'Inactivo') -> r = AlertaRespiraciones(r.Estado = 'Inactivo', r.idcollar = p.idcollar)) where timer:within(5 seconds)];
+@Name('ActividadAnormal')
+insert into ActividadAnormal
+select p.Pul1 as Pulsaciones, r.Resp1 as Respiraciones, p.Estado as Estado, p.idcollar as Collar, p.NomMascota as NomMascota from pattern [every (p = AlertaPulsaciones(p.Estado = 'Inactivo') -> r = AlertaRespiraciones(r.Estado = 'Inactivo' and r.idcollar = p.idcollar)) where timer:within(5 seconds)];
 
 @Name('ProblemaSalud')
 insert into ProblemaSalud
@@ -58,7 +57,7 @@ from pattern [every p = AlertaPulsaciones -> t = AlertaTemperatura(idcollar = p.
 @Name('AlertaComedero')
 insert into AlertaComedero
 select c.idcollar, c.estado as EstadoComedero
-from pattern [every c = Comedero(estado != 'Vacio') -> timer:interval(10 minutes) and not Comedero(idcollar = c.idcollar, estado = 'Vacio')];
+from pattern [every c = Comedero(estado != 'Vacio') -> timer:interval(11 minutes) and not Comedero(idcollar = c.idcollar, estado = 'Vacio')];
 
 @Name('AvisarDueno')
 insert into AvisarDueno
@@ -68,6 +67,4 @@ from pattern [every (Huida or ZonaDesconocida or AlertaComedero or ComederoVacio
 @Name('AvisarVeterinaria')
 insert into AvisarVeterinaria
 select  "Mensaje Enviado a la clínica" as Mensaje, c.nombre as Clinica
-from pattern [every (ProblemaSalud or InactividadProlongada) -> c = Clinica ];
-
-
+from pattern [every (ProblemaSalud or ActividadAnormal) -> c = Clinica ];
