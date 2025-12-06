@@ -55,3 +55,4 @@ Pulsaciones={idcollar=1, nombre="Manoli", valor=46, estado="inactivo"}
 Respiraciones={idcollar=1, nombre="Manoli", valor=8, estado="inactivo"}
 Temperatura={idcollar=1, nombre="Manoli", valor=36}
 Clinica = {nombre="AnimalitosBonitos", ubicacion="Puertas del sur"}
+
