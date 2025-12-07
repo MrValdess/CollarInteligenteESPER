@@ -65,7 +65,7 @@ public class Main {
         ),
         AvisarVeterinaria(
                 "@public insert into AvisarVeterinaria " +
-                        "select  \"Mensaje Enviado a la clínica\" as Mensaje, c.nombre as Clinica " +
+                        "select  \"Mensaje Enviado a la clínica\" as Mensaje, c.nombre as Nombre " +
                         "from pattern [every (ProblemaSalud or ActividadAnormal) -> c = Clinica ];"
         )
         ;
