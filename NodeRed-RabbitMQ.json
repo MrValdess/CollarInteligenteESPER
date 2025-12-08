@@ -1,0 +1,225 @@
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "58a08a6987ff5ae0",
+        "type": "amqp-in",
+        "z": "f6f2187d.f17ca8",
+        "name": "RabbitMQ",
+        "broker": "c770d0c714889c30",
+        "prefetch": "10",
+        "noAck": false,
+        "exchangeName": "",
+        "exchangeType": "direct",
+        "exchangeRoutingKey": "",
+        "exchangeDurable": true,
+        "queueName": "OutputMessages",
+        "queueExclusive": false,
+        "queueDurable": false,
+        "queueAutoDelete": false,
+        "headers": "{}",
+        "x": 240,
+        "y": 140,
+        "wires": [
+            [
+                "7583ea4b57a15174"
+            ]
+        ]
+    },
+    {
+        "id": "7583ea4b57a15174",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "Filtro Eventos",
+        "func": "let e = msg.payload;\n\n// =====================================================\n// 1. Eventos que SÍ deben mostrarse en el Dashboard\n// =====================================================\nconst eventosDashboard = [\n    \"Huida\",\n    \"ProblemaSalud\",\n    \"AvisarDueno\"\n];\n\nlet mostrarDashboard = eventosDashboard.includes(e.EventoComplejo);\n\n// =====================================================\n// 2. Crear campos estándar\n// =====================================================\nlet tipo = e.EventoComplejo;\n\n// Identificador correcto\nlet identificador =\n    e.idcollar ??\n    e.idcomedero ??\n    e.Collar ??\n    null;\n\nif (tipo === \"AvisarDueno\") {\n    identificador = \"N/A\";\n}\n\n// Fecha estándar\nlet fecha = new Date().toISOString().replace(\"T\",\" \").split(\".\")[0];\n\nlet data_json = JSON.stringify(e, null, 2);\n\n// =====================================================\n// 3. Mensaje para SQLite (siempre se envía)\n// =====================================================\nlet msgSQL = {\n    topic: \"INSERT INTO eventos (tipo, identificador, data_json, fecha) VALUES (?,?,?,?)\",\n    payload: [\n        tipo,\n        identificador,\n        data_json,\n        fecha\n    ]\n};\n\n// =====================================================\n// 4. Mensaje para Dashboard (solo si corresponde)\n// =====================================================\nlet msgDash = mostrarDashboard\n    ? {\n        payload: {\n            tipo,\n            identificador,\n            fecha,\n            data_json\n        }\n    }\n    : null;\n\n// =====================================================\n// 5. Salidas\n// =====================================================\nreturn [msgDash, msgSQL];\n",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 140,
+        "wires": [
+            [
+                "10a16d3d2b6a8fe3"
+            ],
+            [
+                "f1fc83b3e17e69f8"
+            ]
+        ]
+    },
+    {
+        "id": "f1fc83b3e17e69f8",
+        "type": "sqlite",
+        "z": "f6f2187d.f17ca8",
+        "mydb": "db8009aa31228328",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "",
+        "x": 680,
+        "y": 140,
+        "wires": [
+            [
+                "74274c6968ae6334"
+            ]
+        ]
+    },
+    {
+        "id": "54d7a3a912d371ad",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1120,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "74274c6968ae6334",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "Comprobar Insercion",
+        "func": "if (msg.sqlite) {\n    msg.payload = {\n        ok: true,\n        changes: msg.sqlite.changes,\n        id: msg.sqlite.lastID\n    };\n} else {\n    msg.payload = \"INSERT realizado correctamente\";\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 140,
+        "wires": [
+            [
+                "54d7a3a912d371ad"
+            ]
+        ]
+    },
+    {
+        "id": "14db3b429b02052e",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "Crear DB",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 320,
+        "y": 240,
+        "wires": [
+            [
+                "189683f190cdcd16"
+            ]
+        ]
+    },
+    {
+        "id": "189683f190cdcd16",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "Crear DB funcion",
+        "func": "msg.topic = `CREATE TABLE IF NOT EXISTS eventos (\n    id INTEGER PRIMARY KEY AUTOINCREMENT,\n    tipo TEXT,\n    identificador TEXT,\n    data_json TEXT,\n    fecha TEXT\n);`;\n\nmsg.payload = []; // sqlite node suele esperar un array vacío cuando no hay parámetros\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 240,
+        "wires": [
+            [
+                "f1fc83b3e17e69f8"
+            ]
+        ]
+    },
+    {
+        "id": "10a16d3d2b6a8fe3",
+        "type": "ui_template",
+        "z": "f6f2187d.f17ca8",
+        "group": "bbae594b77c529dd",
+        "name": "Dashboard",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "format": "<style>\n    .card {\n        background: #cfe8ff;\n        /* azul pastel */\n        border-radius: 18px;\n        padding: 20px;\n        font-family: Arial;\n        color: #00324d;\n        box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);\n        border: 1px solid #a9d3ff;\n    }\n\n    .title {\n        font-size: 20px;\n        font-weight: bold;\n        margin-bottom: 10px;\n    }\n\n    .box {\n        background: white;\n        border-radius: 12px;\n        padding: 12px;\n        margin-top: 10px;\n        white-space: pre-wrap;\n    }\n\n    .label {\n        font-weight: bold;\n    }\n</style>\n\n<div class=\"card\">\n\n    <div class=\"title\">Evento recibido</div>\n\n    <div><span class=\"label\">Tipo: </span>{{msg.payload.tipo}}</div>\n    <div><span class=\"label\">Identificador: </span>{{msg.payload.identificador}}</div>\n    <div><span class=\"label\">Fecha: </span>{{msg.payload.fecha}}</div>\n\n    <div>\n        <span class=\"label\">Data JSON:</span>\n        <div class=\"box\">{{msg.payload.data_json}}</div>\n    </div>\n\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 710,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c770d0c714889c30",
+        "type": "amqp-broker",
+        "name": "RabbitMQ",
+        "host": "rabbitmq",
+        "port": 5672,
+        "vhost": "",
+        "tls": false,
+        "credsFromSettings": false
+    },
+    {
+        "id": "db8009aa31228328",
+        "type": "sqlitedb",
+        "db": "mascotas",
+        "mode": "RWC"
+    },
+    {
+        "id": "bbae594b77c529dd",
+        "type": "ui_group",
+        "name": "Smart Pet Collar",
+        "tab": "3e5a8e1fab5d7696",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "3e5a8e1fab5d7696",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "259025f0b515d8ec",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@meowwolf/node-red-contrib-amqp": "2.4.2",
+            "node-red-node-sqlite": "1.1.1",
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
