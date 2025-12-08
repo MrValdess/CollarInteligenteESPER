@@ -1,4 +1,4 @@
-#Smart Pet Collar
+# Smart Pet Collar
 
 Este repositorio contiene el trabajo final de la asignatura Ingeniería de Sistemas de la Información.
 
