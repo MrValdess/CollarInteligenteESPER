@@ -122,27 +122,7 @@
       <LstOfValues>
         <MicroListCls>
           <complementaryValues />
-          <Value>Pepe</Value>
-          <Weight>100</Weight>
-        </MicroListCls>
-        <MicroListCls>
-          <complementaryValues />
-          <Value>Manuel</Value>
-          <Weight>100</Weight>
-        </MicroListCls>
-        <MicroListCls>
-          <complementaryValues />
-          <Value>Diogenes</Value>
-          <Weight>100</Weight>
-        </MicroListCls>
-        <MicroListCls>
-          <complementaryValues />
-          <Value>Toby</Value>
-          <Weight>100</Weight>
-        </MicroListCls>
-        <MicroListCls>
-          <complementaryValues />
-          <Value>Max</Value>
+          <Value>Manoli</Value>
           <Weight>100</Weight>
         </MicroListCls>
         <MicroListCls>
@@ -152,17 +132,17 @@
         </MicroListCls>
         <MicroListCls>
           <complementaryValues />
-          <Value>Chichon de suelo</Value>
+          <Value>Kaki</Value>
           <Weight>100</Weight>
         </MicroListCls>
         <MicroListCls>
           <complementaryValues />
-          <Value>Luna</Value>
+          <Value>Bolita</Value>
           <Weight>100</Weight>
         </MicroListCls>
         <MicroListCls>
           <complementaryValues />
-          <Value>Serbia</Value>
+          <Value>Agustin</Value>
           <Weight>100</Weight>
         </MicroListCls>
       </LstOfValues>
@@ -937,7 +917,7 @@
         <Name>Clinica</Name>
         <MustRun>true</MustRun>
         <From>1</From>
-        <To>1800</To>
+        <To>30</To>
         <IsRepActive>false</IsRepActive>
         <RepFrom>1</RepFrom>
         <RepTo>1</RepTo>
