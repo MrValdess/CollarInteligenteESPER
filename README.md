@@ -43,8 +43,6 @@ Aquí encontrarás:
 
 - Código fuente  
 - Configuraciones  
-- Simulación del sistema  
-- Documentación asociada  
 
 ---
 
