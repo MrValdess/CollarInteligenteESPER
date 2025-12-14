@@ -39,8 +39,6 @@ El proyecto integra diversas herramientas y lenguajes:
 
 ## 📦 Contenido del repositorio
 
-Aquí encontrarás:
-
 - Código fuente  
 - Configuraciones  
 
